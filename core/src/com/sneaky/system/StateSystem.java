@@ -24,7 +24,7 @@ public class StateSystem extends IntervalIteratingSystem {
     private Integer currentIndex;
 
     public StateSystem(final Integer totalTiles, final Integer toSelect) {
-        super(Family.all(StateComponent.class, VisualComponent.class).get(), 1);
+        super(Family.all(StateComponent.class, VisualComponent.class).get(), 1, 0);
         final SecureRandom random = new SecureRandom();
         for (int i = 0; i < toSelect; i++) {
             while ( true) {

@@ -19,7 +19,7 @@ public class RenderSystem extends IteratingSystem {
     private final ComponentMapper<PositionComponent> positionMapper = ComponentMapper.getFor(PositionComponent.class);
 
     public RenderSystem(final OrthographicCamera camera) {
-        super(Family.all(VisualComponent.class, PositionComponent.class).get());
+        super(Family.all(VisualComponent.class, PositionComponent.class).get(), 1);
         this.camera = camera;
         this.batch = new SpriteBatch();
     }

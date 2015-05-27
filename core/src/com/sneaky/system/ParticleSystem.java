@@ -18,7 +18,7 @@ public class ParticleSystem extends IteratingSystem {
     private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private final ComponentMapper<ParticleComponent> particleMapper = ComponentMapper.getFor(ParticleComponent.class);
     public ParticleSystem(){
-        super(Family.all(ParticleComponent.class, PositionComponent.class).get());
+        super(Family.all(ParticleComponent.class, PositionComponent.class).get(),2);
         this.batch = new SpriteBatch();
     }
 
