@@ -9,6 +9,6 @@ import com.sneaky.screen.GameScreen;
 public class MemoTilesGame extends Game {
     @Override
     public void create() {
-        setScreen(new GameScreen());
+        setScreen(new GameScreen());            
     }
 }
