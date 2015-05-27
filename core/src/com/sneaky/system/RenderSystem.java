@@ -38,6 +38,8 @@ public class RenderSystem extends IteratingSystem {
     protected void processEntity(final Entity entity, final float deltaTime) {
         final VisualComponent visualComponent = visualMapper.get(entity);
         final PositionComponent positionComponent = positionMapper.get(entity);
-        batch.draw(visualComponent.getTextureRegion(), positionComponent.getX(), positionComponent.getY());
+        batch.setColor(visualComponent.getColor());
+        batch.draw(visualComponent.getTextureRegion(), positionComponent.getX(), positionComponent.getY(), 
+                visualComponent.getWidth(), visualComponent.getHeight());
     }
 }
