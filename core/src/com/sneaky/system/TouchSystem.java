@@ -11,7 +11,11 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.math.Vector3;
 import com.sneaky.component.BoundsComponent;
 import com.sneaky.component.ParticleComponent;
+import com.sneaky.component.StateComponent;
 import com.sneaky.component.VisualComponent;
+
+import static com.sneaky.component.StateComponent.State.INVALID;
+import static com.sneaky.component.StateComponent.State.VALID;
 
 /**
  * @author Kristaps Kohs
@@ -22,10 +26,11 @@ public class TouchSystem extends IteratingSystem {
     private final ComponentMapper<BoundsComponent> bm = ComponentMapper.getFor(BoundsComponent.class);
     private final ComponentMapper<VisualComponent> visualMapper = ComponentMapper.getFor(VisualComponent.class);
     private final ComponentMapper<ParticleComponent> pm = ComponentMapper.getFor(ParticleComponent.class);
+    private final ComponentMapper<StateComponent> stateMapper = ComponentMapper.getFor(StateComponent.class);
     private final ParticleEffectPool pool;
-    
+
     public TouchSystem(final OrthographicCamera camera, final ParticleEffectPool pool) {
-        super(Family.all(BoundsComponent.class, VisualComponent.class, ParticleComponent.class).get());
+        super(Family.all(BoundsComponent.class, VisualComponent.class, ParticleComponent.class, StateComponent.class).get());
         this.camera = camera;
         this.pool = pool;
     }
@@ -43,13 +48,14 @@ public class TouchSystem extends IteratingSystem {
     protected void processEntity(final Entity entity, final float deltaTime) {
         BoundsComponent boundsComponent = bm.get(entity);
         VisualComponent visualComponent = visualMapper.get(entity);
-        ParticleComponent particleComponent = pm.get(entity);
-        if (boundsComponent.getRectangle().contains(touchPoint.x, touchPoint.y)) {
+        StateComponent stateComponent = stateMapper.get(entity);
+        if (boundsComponent.getRectangle().contains(touchPoint.x, touchPoint.y)
+                && INVALID.equals(stateComponent.getState())) {
             visualComponent.setColor(Color.RED);
-            particleComponent.setEffect(pool.obtain());
+        } else if (boundsComponent.getRectangle().contains(touchPoint.x, touchPoint.y)
+                && VALID.equals(stateComponent.getState())) {
+            visualComponent.setColor(Color.GREEN);
         } else {
-            pool.obtain().free();
-            particleComponent.setEffect(null);
             visualComponent.setColor(Color.WHITE);
         }
     }

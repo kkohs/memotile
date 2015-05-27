@@ -17,17 +17,19 @@ import com.badlogic.gdx.math.Vector2;
 import com.sneaky.component.BoundsComponent;
 import com.sneaky.component.ParticleComponent;
 import com.sneaky.component.PositionComponent;
+import com.sneaky.component.StateComponent;
 import com.sneaky.component.VisualComponent;
 import com.sneaky.system.ParticleSystem;
 import com.sneaky.system.RenderSystem;
+import com.sneaky.system.StateSystem;
 import com.sneaky.system.TouchSystem;
 
 /**
  * @author Kristaps Kohs
  */
 public class GameScreen extends ScreenAdapter {
-    public static final int WIDTH = 128;
-    public static final int HEIGHT = 128;
+    public static final int WIDTH = 64;
+    public static final int HEIGHT = 64;
     public static final int SPACING = 10;
     private Engine engine;
     private OrthographicCamera camera;
@@ -43,35 +45,41 @@ public class GameScreen extends ScreenAdapter {
         assetManager.finishLoading();
         engine = new PooledEngine();
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.position.set(Gdx.graphics.getWidth() /2 , Gdx.graphics.getWidth()  / 2, 0);
+        camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getWidth() / 2, 0);
         camera.update();
         RenderSystem renderSystem = new RenderSystem(camera);
-        
-        pool = new ParticleEffectPool(assetManager.get("clik.p", ParticleEffect.class), 1,2);
 
-for (int i = 0; i < 2; i++) {
-    for (int j = 0 ; j < 3; j++) {
-        Entity tile = new Entity();
-        VisualComponent visualComponent 
-                = new VisualComponent(new TextureRegion(assetManager.get("tile.png", Texture.class)));
-        visualComponent.setDimension(new Vector2(WIDTH, HEIGHT));
-        tile.add(visualComponent);
-        PositionComponent positionComponent =new PositionComponent();
-        positionComponent.setX(i * (WIDTH + SPACING));
-        positionComponent.setY(j * (HEIGHT + SPACING));
-        tile.add(positionComponent);
+        pool = new ParticleEffectPool(assetManager.get("clik.p", ParticleEffect.class), 1, 2);
 
-        Rectangle rectangle = new Rectangle(positionComponent.getX(), positionComponent.getY(),
-                visualComponent.getWidth(), visualComponent.getHeight());
-        BoundsComponent boundsComponent = new BoundsComponent(rectangle);
-        tile.add(boundsComponent);
-        tile.add(new ParticleComponent());
-        engine.addEntity(tile);
-    }
-}
+        int tileIndex = 0;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 6; j++) {
+                Entity tile = new Entity();
+                VisualComponent visualComponent
+                        = new VisualComponent(new TextureRegion(assetManager.get("tile.png", Texture.class)));
+                visualComponent.setDimension(new Vector2(WIDTH, HEIGHT));
+                tile.add(visualComponent);
+                PositionComponent positionComponent = new PositionComponent();
+                positionComponent.setX(i * (WIDTH + SPACING) + Gdx.graphics.getWidth() / 2);
+                positionComponent.setY(j * (HEIGHT + SPACING));
+                tile.add(positionComponent);
+
+                Rectangle rectangle = new Rectangle(positionComponent.getX(), positionComponent.getY(),
+                        visualComponent.getWidth(), visualComponent.getHeight());
+                BoundsComponent boundsComponent = new BoundsComponent(rectangle);
+                tile.add(boundsComponent);
+                tile.add(new ParticleComponent());
+
+                StateComponent stateComponent = new StateComponent();
+                stateComponent.setIndex(tileIndex++);
+                tile.add(stateComponent);
+                engine.addEntity(tile);
+            }
+        }
         engine.addSystem(renderSystem);
         engine.addSystem(new TouchSystem(camera, pool));
         engine.addSystem(new ParticleSystem());
+        engine.addSystem(new StateSystem(tileIndex, 7));
 
     }
 
