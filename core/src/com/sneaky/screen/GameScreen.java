@@ -26,6 +26,9 @@ import com.sneaky.system.TouchSystem;
  * @author Kristaps Kohs
  */
 public class GameScreen extends ScreenAdapter {
+    public static final int WIDTH = 128;
+    public static final int HEIGHT = 128;
+    public static final int SPACING = 10;
     private Engine engine;
     private OrthographicCamera camera;
     private AssetManager assetManager;
@@ -39,23 +42,23 @@ public class GameScreen extends ScreenAdapter {
         assetManager.load("clik.p", ParticleEffect.class);
         assetManager.finishLoading();
         engine = new PooledEngine();
-        OrthographicCamera camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.position.set(Gdx.graphics.getWidth() /2 , Gdx.graphics.getWidth()  / 2, 0);
         camera.update();
         RenderSystem renderSystem = new RenderSystem(camera);
         
         pool = new ParticleEffectPool(assetManager.get("clik.p", ParticleEffect.class), 1,2);
 
-for (int i = 0; i < 6; i++) {
-    for (int j = 0 ; j < 8; j++) {
+for (int i = 0; i < 2; i++) {
+    for (int j = 0 ; j < 3; j++) {
         Entity tile = new Entity();
         VisualComponent visualComponent 
                 = new VisualComponent(new TextureRegion(assetManager.get("tile.png", Texture.class)));
-        visualComponent.setDimension(new Vector2(32, 32));
+        visualComponent.setDimension(new Vector2(WIDTH, HEIGHT));
         tile.add(visualComponent);
         PositionComponent positionComponent =new PositionComponent();
-        positionComponent.setX(i * (32 + 10));
-        positionComponent.setY(j * (32 + 10));
+        positionComponent.setX(i * (WIDTH + SPACING));
+        positionComponent.setY(j * (HEIGHT + SPACING));
         tile.add(positionComponent);
 
         Rectangle rectangle = new Rectangle(positionComponent.getX(), positionComponent.getY(),
