@@ -35,6 +35,7 @@ public class TouchSystem extends IteratingSystem {
         super(Family.all(BoundsComponent.class, VisualComponent.class, ParticleComponent.class, StateComponent.class, LightComponent.class).get(), 0);
         this.camera = camera;
         this.pool = pool;
+        this.setProcessing(false);
     }
 
     @Override

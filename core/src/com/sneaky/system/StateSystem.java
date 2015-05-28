@@ -1,6 +1,7 @@
 package com.sneaky.system;
 
 import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IntervalIteratingSystem;
@@ -21,7 +22,9 @@ public class StateSystem extends IntervalIteratingSystem {
     private final ComponentMapper<StateComponent> mapper = ComponentMapper.getFor(StateComponent.class);
     private final ComponentMapper<VisualComponent> visualMapper = ComponentMapper.getFor(VisualComponent.class);
     private final Queue<Integer> toInitialize = new LinkedList<Integer>();
+    
     private Integer currentIndex;
+    private Engine engine;
 
     public StateSystem(final Integer totalTiles, final Integer toSelect) {
         super(Family.all(StateComponent.class, VisualComponent.class).get(), 1, 0);
@@ -37,11 +40,18 @@ public class StateSystem extends IntervalIteratingSystem {
         }
     }
 
+    @Override
+    public void addedToEngine(final Engine engine) {
+       super.addedToEngine(engine);
+        this.engine = engine;
+    }
 
     @Override
     protected void updateInterval() {
         currentIndex = toInitialize.poll();
         if (currentIndex == null)  {
+            final TouchSystem system = engine.getSystem(TouchSystem.class);
+            system.setProcessing(true);
             setProcessing(false);
         }
             super.updateInterval();
@@ -50,8 +60,8 @@ public class StateSystem extends IntervalIteratingSystem {
 
     @Override
     protected void processEntity(final Entity entity) {
-        StateComponent component = mapper.get(entity);
-        VisualComponent visualComponent = visualMapper.get(entity);
+        final StateComponent component = mapper.get(entity);
+        final VisualComponent visualComponent = visualMapper.get(entity);
         if (component.isInitialized() || currentIndex == null) {
             visualComponent.setColor(Color.WHITE);
         } else 

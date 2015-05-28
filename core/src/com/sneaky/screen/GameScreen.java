@@ -68,7 +68,7 @@ public class GameScreen extends ScreenAdapter {
         rayHandler = new RayHandler(world);
         engine = new PooledEngine();
         camera = new OrthographicCamera(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-        camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
+        camera.position.set(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() / 2, 0);
         camera.update();
         RenderSystem renderSystem = new RenderSystem(camera);
 
@@ -137,6 +137,7 @@ public class GameScreen extends ScreenAdapter {
         }
         engine.addSystem(renderSystem);
         engine.addSystem(new TouchSystem(camera, pool));
+        
        // engine.addSystem(new ParticleSystem());
         engine.addSystem(new StateSystem(tileIndex, 7));
         engine.addSystem(new PhysicsSystem(world, camera));
